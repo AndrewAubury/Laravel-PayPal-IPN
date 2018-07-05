@@ -59,12 +59,8 @@ class PaypalIPNListener
      *
      * @var boolean
      */
-    public $use_sandbox;
-    if(config('app.debug')){
-         $use_sandbox= true;
-    }else{
-         $use_sandbox= false;
-    }
+    public $use_sandbox = false;
+    
     /**
      *  The amount of time, in seconds, to wait for the PayPal server to respond
      *  before timing out. Default 30 seconds.
@@ -99,7 +95,13 @@ class PaypalIPNListener
      */
     protected function curlPost($encoded_data)
     {
-
+        
+        if(config('app.debug')){
+             $use_sandbox= true;
+        }else{
+             $use_sandbox= false;
+        }
+        
         if ($this->use_ssl) {
             $uri = 'https://' . $this->getPaypalHost() . '/cgi-bin/webscr';
         } else {
@@ -145,7 +147,11 @@ class PaypalIPNListener
      */
     protected function fsockPost($encoded_data)
     {
-
+        if(config('app.debug')){
+             $use_sandbox= true;
+        }else{
+             $use_sandbox= false;
+        }
         if ($this->use_ssl) {
             $uri = 'ssl://' . $this->getPaypalHost();
             $port = '443';
@@ -186,7 +192,7 @@ class PaypalIPNListener
 
     private function getPaypalHost()
     {
-        if ($this->use_sandbox) return self::SANDBOX_HOST;
+        if (config('app.debug')) return self::SANDBOX_HOST;
         else return self::PAYPAL_HOST;
     }
 
