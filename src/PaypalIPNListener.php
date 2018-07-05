@@ -59,8 +59,12 @@ class PaypalIPNListener
      *
      * @var boolean
      */
-    public $use_sandbox = false;
-
+    public $use_sandbox;
+    if(config('app.debug')){
+         $use_sandbox= true;
+    }else{
+         $use_sandbox= false;
+    }
     /**
      *  The amount of time, in seconds, to wait for the PayPal server to respond
      *  before timing out. Default 30 seconds.
